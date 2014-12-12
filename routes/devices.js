@@ -117,20 +117,6 @@ module.exports = [
         }
     },
     {
-        method: 'GET',
-        path: '/devices/{id}/devices',
-        handler: function(request, reply) {
-            reply('OK!');
-        },
-        config: {
-            validate: {
-                params: {
-                    id: DeviceSchema.id.required()
-                }
-            }
-        }
-    },
-    {
         method: 'POST',
         path: '/devices',
         handler: function(request, reply) {

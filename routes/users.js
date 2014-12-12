@@ -1,4 +1,5 @@
 var V = require('joi'),
+    _ = require('lodash'),
     Boom = require('boom'),
     uuid = require('node-uuid'),
     config = require('config'),
@@ -33,6 +34,26 @@ function deleteUser(uid, cb) {
 function saveUser(user, cb) {
     ddb.putItem('users', user, {}, function(err, res, cap) {
         cb(err);
+    });
+}
+
+function fetchDevices(user, cb) {
+    var filter = {
+        owner: {
+            eq: user.id
+        }
+    };
+
+    ddb.scan('devices', {filter: filter}, function(err, res) {
+        if (err) return cb(err);
+
+        var devices = _.map(res.items, function(device) {
+            device.owner = user;
+
+            return device;
+        });
+
+        cb(null, devices);
     });
 }
 
@@ -76,7 +97,16 @@ module.exports = [
         method: 'GET',
         path: '/users/{id}/devices',
         handler: function(request, reply) {
-            reply('OK!');
+            fetchUser(request.params.id, function(err, user) {
+                if (err) return reply(err);
+                if (!user) return reply(Boom.notFound('user not found'));
+
+                fetchDevices(user, function(err, devices) {
+                    if (err) return reply(err);
+
+                    reply(devices);
+                });
+            });
         },
         config: {
             validate: {
