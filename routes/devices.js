@@ -2,12 +2,8 @@ var V = require('joi'),
     Boom = require('boom'),
     uuid = require('node-uuid'),
     _ = require('lodash'),
-    config = require('../config'),
-    ddb = require('dynamodb').ddb({
-        accessKeyId: config.key,
-        secretAccessKey: config.secret,
-        endpoint: 'dynamodb.eu-west-1.amazonaws.com'
-    }),
+    config = require('config'),
+    ddb = require('dynamodb').ddb(config.AWS),
     DeviceSchema = {
         id: V.string().guid(),
         owner: V.string().guid(),

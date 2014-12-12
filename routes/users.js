@@ -1,12 +1,8 @@
 var V = require('joi'),
     Boom = require('boom'),
     uuid = require('node-uuid'),
-    config = require('../config'),
-    ddb = require('dynamodb').ddb({
-        accessKeyId: config.key,
-        secretAccessKey: config.secret,
-        endpoint: 'dynamodb.eu-west-1.amazonaws.com'
-    }),
+    config = require('config'),
+    ddb = require('dynamodb').ddb(config.AWS),
     UserSchema = {
         id: V.string().guid(),
         name: V.string().required(),
@@ -16,6 +12,8 @@ var V = require('joi'),
 
 function fetchAllUsers(cb) {
     ddb.scan('users', {}, function(err, res) {
+        if (err) return cb(err);
+
         cb(err, res.items);
     });
 }
