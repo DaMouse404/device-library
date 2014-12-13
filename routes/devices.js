@@ -88,7 +88,6 @@ module.exports = [
             if (request.params.id) {
                 fetchDevice(request.params.id, function(err, device) {
                     if (err) {
-                        console.log(err);
                         throw err;
                     } else {
                         if (!device) {
