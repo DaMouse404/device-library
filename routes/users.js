@@ -3,7 +3,7 @@ var V = require('joi'),
     Boom = require('boom'),
     uuid = require('node-uuid'),
     config = require('config'),
-    ddb = require('dynamodb').ddb(config.AWS),
+    ddb = require('../lib/database'),
     UserSchema = {
         id: V.string().guid(),
         name: V.string().required(),

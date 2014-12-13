@@ -3,7 +3,7 @@ var V = require('joi'),
     uuid = require('node-uuid'),
     _ = require('lodash'),
     config = require('config'),
-    ddb = require('dynamodb').ddb(config.AWS),
+    ddb = require('../lib/database'),
     DeviceSchema = {
         id: V.string().guid(),
         owner: V.string().guid(),
