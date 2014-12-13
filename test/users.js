@@ -99,4 +99,71 @@ describe('Users', function() {
             done();
         });
     });
+
+    it('Updates an existing user', function(done) {
+        var user = {
+            name: 'Christmas',
+            email: 'tree@christmas.com',
+            team: 'Santa'
+        },
+        params = {
+            method: 'PUT',
+            url: '/users/4f25951e-82d8-11e4-b116-123b93f75cba',
+            payload: user
+        },
+        getItem = sinon.stub(database, 'getItem', function(table, hash, range, opts, cb) {
+            cb(null, {id: '4f25951e-82d8-11e4-b116-123b93f75cba'});
+        }),
+        putItem = sinon.stub(database, 'putItem', function(table, item, options, cb) {
+            cb(null);
+        });
+
+        server.inject(params, function(response) {
+            user.id = '4f25951e-82d8-11e4-b116-123b93f75cba';
+
+            assert(getItem.calledOnce);
+            assert(getItem.calledWith('users', '4f25951e-82d8-11e4-b116-123b93f75cba'));
+
+            assert(putItem.calledOnce);
+            assert(putItem.calledWith('users', user));
+
+            assert.equal(response.statusCode, 200);
+
+            getItem.restore();
+            putItem.restore();
+            done();
+        });
+    });
+
+    it('Gets all devices for a user', function(done) {
+        var params = {
+            method: 'GET',
+            url: '/users/4f25951e-82d8-11e4-b116-123b93f75cba/devices',
+        },
+        filter = {
+            owner: {
+                eq: '4f25951e-82d8-11e4-b116-123b93f75cba'
+            }
+        },
+        getItem = sinon.stub(database, 'getItem', function(table, hash, range, opts, cb) {
+            cb(null, {id: '4f25951e-82d8-11e4-b116-123b93f75cba'});
+        }),
+        scan = sinon.stub(database, 'scan', function(table, options, cb) {
+            cb(null, {items: [{id: 'woof', owner: '4f25951e-82d8-11e4-b116-123b93f75cba'}]});
+        });
+
+        server.inject(params, function(response) {
+            assert(getItem.calledOnce);
+            assert(getItem.calledWith('users', '4f25951e-82d8-11e4-b116-123b93f75cba'));
+
+            assert(scan.calledOnce);
+            assert(scan.calledWith('devices', { filter: filter }));
+
+            assert.equal(response.statusCode, 200);
+
+            getItem.restore();
+            scan.restore();
+            done();
+        });
+    });
 });

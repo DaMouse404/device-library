@@ -65,7 +65,6 @@ module.exports = [
             if (request.params.id) {
                 fetchUser(request.params.id, function(err, user) {
                     if (err) {
-                        console.log(err);
                         throw err;
                     } else {
                         if (!user) {
@@ -141,7 +140,19 @@ module.exports = [
         method: 'PUT',
         path: '/users/{id}',
         handler: function(request, reply) {
-            reply('OK!');
+            fetchUser(request.params.id, function(err, user) {
+                if (err) throw err;
+                if (!user) return reply(Boom.notFound());
+
+                user = request.payload;
+                user.id = request.params.id;
+
+                saveUser(user, function(err) {
+                    if (err) throw err;
+
+                    reply();
+                });
+            });
         },
         config: {
             validate: {
