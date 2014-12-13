@@ -34,6 +34,7 @@
     "blanket": "~1.1.6",
     "coveralls": "~2.11.2",
     "mocha-lcov-reporter": "0.0.1",
-    "mocha-term-cov-reporter": "~0.2.0"
+    "mocha-term-cov-reporter": "~0.2.0",
+    "mocha": "~2.0.1"
   }
 }
