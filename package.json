@@ -3,12 +3,21 @@
   "version": "0.0.0",
   "description": "API for managing devices in device locker",
   "main": "server.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "./node_modules/.bin/mocha"
-  },
   "author": "Christopher Sidebottom",
   "license": "MIT",
+  "config": {
+    "blanket": {
+      "pattern": [
+        "lib",
+        "routes",
+        "server.js"
+      ],
+      "data-cover-never": [
+        "node_modules",
+        "test"
+      ]
+    }
+  },
   "dependencies": {
     "hapi": "~8.0.0",
     "joi": "~5.0.2",
@@ -21,6 +30,10 @@
   },
   "devDependencies": {
     "nock": "~0.52.0",
-    "sinon": "~1.12.2"
+    "sinon": "~1.12.2",
+    "blanket": "~1.1.6",
+    "coveralls": "~2.11.2",
+    "mocha-lcov-reporter": "0.0.1",
+    "mocha-term-cov-reporter": "~0.2.0"
   }
 }
