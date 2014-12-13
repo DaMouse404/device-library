@@ -150,7 +150,7 @@ module.exports = [
                 if (err) throw err;
                 if (!device) return reply(Boom.notFound('device not found'));
 
-                var device = request.payload;
+                device = request.payload;
                 device.id = request.params.id;
 
                 saveDevice(device, function(err) {
