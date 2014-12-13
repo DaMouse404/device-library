@@ -120,6 +120,11 @@ module.exports = [
         path: '/users',
         handler: function(request, reply) {
             var newUser = request.payload;
+
+            if (newUser.id) {
+                return reply(Boom.notFound('ID Supplied for device creation'));
+            }
+
             newUser.id = uuid.v1();
 
             saveUser(newUser, function(err) {
