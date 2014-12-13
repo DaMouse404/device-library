@@ -41,6 +41,23 @@ describe('Users', function() {
         });
     });
 
+    it('Returns a 404 when a user does not exist', function(done) {
+        var params = {
+            method: 'GET',
+            url: '/users/4f25951e-82d8-11e4-b116-123b93f75cba'
+        },
+        getItem = sinon.stub(database, 'getItem', function(table, hash, range, opts, cb) {
+            cb(null, null);
+        });
+
+        server.inject(params, function(response) {
+            assert.equal(response.statusCode, 404);
+
+            getItem.restore();
+            done();
+        });
+    });
+
     it('Deletes a user from the database', function(done) {
         var params = {
             method: 'DELETE',

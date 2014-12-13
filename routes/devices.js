@@ -41,7 +41,7 @@ function fetchOwners(devices, cb) {
 }
 
 function fetchOwner(device, cb) {
-    if (device.owner) {
+    if (device && device.owner) {
         ddb.getItem('users', device.owner, null, {}, function(err, item, cap) {
             device.owner = item;
 
